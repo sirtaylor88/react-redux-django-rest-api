@@ -2,13 +2,14 @@ import axios from 'axios'
 
 import { createMessage, returnErrors } from './messages'
 import { GET_LEADS, DELETE_LEAD, ADD_LEAD } from './types'
+import { tokenConfig } from '.auth'
 
 // Events management
 
 // GET LEADS
-export const getLeads = () => dispatch => { // nested function possible by using module "thunk"
+export const getLeads = () => (dispatch, getState) => { // nested function possible by using module "thunk"
   axios
-    .get('api/leads/')
+    .get('api/leads/', tokenConfig(getState))
     .then(res => {
       dispatch({
         type: GET_LEADS,
@@ -18,9 +19,9 @@ export const getLeads = () => dispatch => { // nested function possible by using
 }
 
 // DELETE LEADS
-export const deleteLead = (id) => dispatch => { // nested function possible by using module "thunk"
+export const deleteLead = (id) => (dispatch, getState) => { // nested function possible by using module "thunk"
   axios
-    .delete(`api/leads/${id}/`)
+    .delete(`api/leads/${id}/`, tokenConfig(getState))
     .then(res => {
       dispatch(createMessage({ deleteLead: "Lead Deleted" }))
       dispatch({
@@ -31,9 +32,9 @@ export const deleteLead = (id) => dispatch => { // nested function possible by u
 }
 
 // ADD LEADS
-export const addLead = (lead) => dispatch => { // nested function possible by using module "thunk"
+export const addLead = (lead) => (dispatch, getState) => { // nested function possible by using module "thunk"
   axios
-    .post(`api/leads/`, lead)
+    .post(`api/leads/`, lead, tokenConfig(getState))
     .then(res => {
       dispatch(createMessage({ addLead: "Lead Added" }))
       dispatch({
